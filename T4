@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <math.h>
+
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+
+enum education{secondary_education=0, higher_education=1};
+
+
+struct employees {
+	char *familyname;	
+	int yearofbirth;
+	char *position;
+	int salary;	
+	education education1;
+};
+
+void generateName(char *name, int length);
+void printInfo(employees *emp, int i);
+education generateEducation();
+int main(int argc, char** argv) {
+	srand(time(NULL));
+	
+	int Numberofemployees = 20 + rand()%20;
+	
+	employees *emp = (employees *)malloc(Numberofemployees*sizeof(employees));
+	for (int i = 0; i < Numberofemployees; i++)
+    {
+		(emp + i)->familyname = (char *)malloc(5 * sizeof(char));
+		generateName((emp + i)->familyname, 5);
+		
+		(emp + i)->yearofbirth = 1948 + rand()%51;
+		
+		(emp + i)->position = (char *)malloc(5 * sizeof(char));
+		generateName((emp + i)->position, 5);
+		
+		(emp + i)->salary = 10000 + rand()%100001;
+		
+		(emp + i)->education1 = generateEducation();
+		
+		printInfo(emp, i);			
+	}
+	printf("\n---------------\n");
+	int youngest_employee=emp->yearofbirth;
+	int location =1;
+	for (int i = 1; i < Numberofemployees; i++)
+	{
+	    if ((emp+i)->yearofbirth>youngest_employee)
+		{
+			youngest_employee=(emp+i)->yearofbirth;
+			location=i+1;
+		}
+	}
+	printf("Employee %s at # %d is youngest. His year of birth is %d.\n", (emp+(location-1))->familyname, location, youngest_employee);
+	printf("He has position %s, salary %d and education (0-secondary education, 1- higher eduaction) %d.", 
+	      (emp+(location-1))->position, 
+		  (emp+(location-1))->salary, 
+		  (emp+(location-1))->education1);
+	return 0;
+}
+
+
+void generateName(char *name, int length)
+{
+	if (length == 0)
+		length = 1 + rand() % 6;
+
+	for (int i = 0; i < length; i++)
+	{
+		if (i == 0)
+			*(name + i) = (char)(65 + rand() % 24);
+		else
+			*(name + i) = (char)(97 + rand() % 24);
+	}
+	*(name + length) = '\0';
+}
+
+void printInfo(employees *emp, int i)
+{
+	printf("#%d %s \n", i + 1, (emp+i)->familyname);		
+
+	printf(" --> Year of birth: %d\n", (emp + i)->yearofbirth);		  
+
+	printf(" --> Position: %s\n", (emp+i)->position);
+	
+	printf(" --> Salary: %d\n", (emp+i)->salary);
+	
+	printf(" --> Education: %d\n", (emp + i)->education1);		  
+}
+
+education generateEducation()
+{
+	return (education)(0 + rand() % 2);
+}
